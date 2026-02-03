@@ -160,18 +160,11 @@ function generateFilename(pageTitle, pageUrl) {
 }
 
 async function downloadScreenshot(dataUrl, filename) {
-  // Convert data URL to blob for download
-  const response = await fetch(dataUrl);
-  const blob = await response.blob();
-  const objectUrl = URL.createObjectURL(blob);
-  
-  // Download using chrome.downloads API
+  // Download using chrome.downloads API with data URL directly
+  // Note: chrome.downloads API accepts data URLs, no need for object URLs
   await chrome.downloads.download({
-    url: objectUrl,
+    url: dataUrl,
     filename: filename,
     saveAs: false
   });
-  
-  // Clean up object URL after a delay
-  setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
 }
