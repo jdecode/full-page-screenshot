@@ -33,7 +33,7 @@ async function captureFullPageScreenshot(tabId, pageTitle, pageUrl) {
     });
     
     // Wait for rendering
-    await new Promise(resolve => setTimeout(resolve, 200));
+    await new Promise(resolve => setTimeout(resolve, 600));
     
     // Capture visible tab
     const dataUrl = await chrome.tabs.captureVisibleTab(null, { format: 'png' });
