@@ -113,13 +113,21 @@ async function stitchScreenshots(screenshots, pageWidth, pageHeight, viewportHei
   });
 }
 
-function loadImage(dataUrl) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = dataUrl;
-  });
+async function loadImage(dataUrl) {
+  try {
+    // Convert data URL to blob
+    const response = await fetch(dataUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image: ${response.statusText}`);
+    }
+    const blob = await response.blob();
+    
+    // Create ImageBitmap (available in service workers, unlike Image)
+    const imageBitmap = await createImageBitmap(blob);
+    return imageBitmap;
+  } catch (error) {
+    throw new Error(`Failed to load image: ${error.message}`);
+  }
 }
 
 function generateFilename(pageTitle, pageUrl) {
