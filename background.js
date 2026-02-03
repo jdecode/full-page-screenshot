@@ -98,7 +98,8 @@ async function stitchScreenshots(screenshots, pageWidth, pageHeight, viewportHei
     // Calculate the height to draw (last screenshot might be partial)
     const heightToDraw = Math.min(viewportHeight, pageHeight - y);
     
-    ctx.drawImage(img, 0, y, pageWidth, heightToDraw);
+    // Draw the image: source (0, 0, img.width, heightToDraw) -> destination (0, y, pageWidth, heightToDraw)
+    ctx.drawImage(img, 0, 0, img.width, heightToDraw, 0, y, pageWidth, heightToDraw);
   }
   
   // Convert canvas to blob
