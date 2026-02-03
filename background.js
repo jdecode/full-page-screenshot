@@ -114,13 +114,20 @@ async function stitchScreenshots(screenshots, pageWidth, pageHeight, viewportHei
 }
 
 async function loadImage(dataUrl) {
-  // Convert data URL to blob
-  const response = await fetch(dataUrl);
-  const blob = await response.blob();
-  
-  // Create ImageBitmap (available in service workers, unlike Image)
-  const imageBitmap = await createImageBitmap(blob);
-  return imageBitmap;
+  try {
+    // Convert data URL to blob
+    const response = await fetch(dataUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image: ${response.statusText}`);
+    }
+    const blob = await response.blob();
+    
+    // Create ImageBitmap (available in service workers, unlike Image)
+    const imageBitmap = await createImageBitmap(blob);
+    return imageBitmap;
+  } catch (error) {
+    throw new Error(`Failed to load image: ${error.message}`);
+  }
 }
 
 function generateFilename(pageTitle, pageUrl) {
