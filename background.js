@@ -113,13 +113,14 @@ async function stitchScreenshots(screenshots, pageWidth, pageHeight, viewportHei
   });
 }
 
-function loadImage(dataUrl) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = dataUrl;
-  });
+async function loadImage(dataUrl) {
+  // Convert data URL to blob
+  const response = await fetch(dataUrl);
+  const blob = await response.blob();
+  
+  // Create ImageBitmap (available in service workers, unlike Image)
+  const imageBitmap = await createImageBitmap(blob);
+  return imageBitmap;
 }
 
 function generateFilename(pageTitle, pageUrl) {
